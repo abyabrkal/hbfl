@@ -5,7 +5,7 @@ const helpers = require("./helpers");
 // TODO: Configure region
 
 // Declare local variables
-// TODO: Create an ec2 object
+const ec2 = new AWS.EC2();
 const sgName = "hamster_sg";
 const keyName = "hamster_key";
 
