@@ -89,6 +89,9 @@ function createInstance(sgName, keyName) {
   npm run start
   `;
 
+  // Warning came while creating EC2 instance [EC2 Created Successfully]
+  // Buffer() is deprecated due to security and usability issues.
+  // Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
   const userDataEncoded = new Buffer(userData).toString("base64");
 
   const params = {
