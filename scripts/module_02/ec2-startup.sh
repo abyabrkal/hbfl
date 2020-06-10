@@ -2,7 +2,7 @@
 curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
 sudo yum install -y nodejs
 sudo yum install -y git
-git clone https://github.com/ryanmurakami/hbfl.git
+git clone https://github.com/abyabrkal/hbfl.git
 cd hbfl
 npm i
 npm run start

@@ -76,5 +76,32 @@ function createKeyPair(keyName) {
 }
 
 function createInstance(sgName, keyName) {
-  // TODO: create ec2 instance
+  let userData = `#!/bin/bash
+  curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+  sudo yum install -y nodejs
+  sudo yum install -y git
+  git clone https://github.com/abyabrkal/hbfl.git
+  cd hbfl
+  npm i
+  npm run start
+  `;
+
+  const userDataEncoded = new Buffer(userData).toString("base64");
+
+  const params = {
+    ImageId: "ami-09d95fab7fff3776c",
+    InstanceType: "t2.micro",
+    KeyName: keyName,
+    MaxCount: 1,
+    MinCount: 1,
+    SecurityGroups: [sgName],
+    UserData: userDataEncoded,
+  };
+
+  return new Promise((resolve, reject) => {
+    ec2.runInstances(params, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
 }
