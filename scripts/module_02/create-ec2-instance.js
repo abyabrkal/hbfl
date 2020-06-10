@@ -2,7 +2,8 @@
 const AWS = require("aws-sdk");
 const helpers = require("./helpers");
 
-// TODO: Configure region
+// Configure region
+AWS.config.update({ region: "us-east-1" });
 
 // Declare local variables
 const ec2 = new AWS.EC2();
@@ -30,35 +31,37 @@ createSecurityGroup(sgName)
 function createSecurityGroup(sgName) {
   const params = {
     Description: sgName,
-    groupName: sgName,
+    GroupName: sgName,
   };
 
   return new Promise((resolve, reject) => {
-    if (err) reject(err);
-    else {
-      const params = {
-        GroupId: data.GroupId,
-        IpPermissions: [
-          {
-            IpProtocol: "tcp",
-            FromPort: 22,
-            ToPort: 22,
-            IpRanges: [{ CidrIp: "0.0.0.0/0" }],
-          },
-          {
-            IpProtocol: "tcp",
-            FromPort: 3000,
-            ToPort: 3000,
-            IpRanges: [{ CidrIp: "0.0.0.0/0" }],
-          },
-        ],
-      };
+    ec2.createSecurityGroup(params, (err, data) => {
+      if (err) reject(err);
+      else {
+        const params = {
+          GroupId: data.GroupId,
+          IpPermissions: [
+            {
+              IpProtocol: "tcp",
+              FromPort: 22,
+              ToPort: 22,
+              IpRanges: [{ CidrIp: "0.0.0.0/0" }],
+            },
+            {
+              IpProtocol: "tcp",
+              FromPort: 3000,
+              ToPort: 3000,
+              IpRanges: [{ CidrIp: "0.0.0.0/0" }],
+            },
+          ],
+        };
 
-      ec2.authorizeSecurityGroupIngress(params, (err) => {
-        if (err) reject(err);
-        else resolve();
-      });
-    }
+        ec2.authorizeSecurityGroupIngress(params, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }
+    });
   });
 }
 
